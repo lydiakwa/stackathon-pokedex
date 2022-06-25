@@ -12,12 +12,16 @@ import { useState } from 'react';
 
 import { usePokemons } from '../apis/pokemon';
 
+import PokemonDetail from './PokemonDetail';
+
+//renders the individual list items (objects in the array passed into data)
 const Item = ({ name, url }) => (
   <View style={styles.button}>
     <Button
       style={styles.name}
       title={name}
       onPress={() => {
+        <PokemonDetail />;
         console.log(url);
       }}
     />
@@ -25,8 +29,6 @@ const Item = ({ name, url }) => (
 );
 
 const PokemonList = () => {
-  const [onEnd, setOnEnd] = useState(true);
-
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     usePokemons();
 
@@ -57,20 +59,16 @@ const PokemonList = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.url}
         //endless scroll props
-        onMomentumScrollBegin={() => {
-          console.log(onEnd);
-          setOnEnd(false);
-        }}
+        // onMomentumScrollBegin={() => {
+        //   console.log(onEnd);
+        //   setOnEnd(false);
+        // }}
         ListFooterComponent={renderFooter}
         onEndReachedThreshold={0.5}
         onEndReached={() => {
-          if (!onEnd) {
-            console.log('this is the end');
-            setOnEnd(true);
-          }
+          fetchNextPage();
         }}
       />
-      {/* <Button title="Next" onPress={() => fetchNextPage()} /> */}
     </View>
   );
 };

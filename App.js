@@ -10,15 +10,17 @@ const queryClient = new QueryClient();
 export default function App() {
   return (
     //this is like PROVIDER from react-redux
-    <QueryClientProvider client={queryClient}>
-      <View style={styles.container}>
-        <Text>Pokedex</Text>
-        <PokemonList />
+    <NavigationContainer>
+      <QueryClientProvider client={queryClient}>
+        <View style={styles.container}>
+          <Text>Pokedex</Text>
+          <PokemonList />
 
-        <StatusBar style="auto" />
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-      </View>
-    </QueryClientProvider>
+          <StatusBar style="auto" />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </View>
+      </QueryClientProvider>
+    </NavigationContainer>
   );
 }
 

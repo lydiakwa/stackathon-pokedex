@@ -10,6 +10,12 @@ export const getPokemons = async ({
   return data;
 };
 
+export const getPokemon = async () => {
+  const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon/1');
+  console.log(data);
+  return data;
+};
+
 //example of a custom hook -- a function that starts with the word use
 //and uses another hook
 export const usePokemons = () => {
