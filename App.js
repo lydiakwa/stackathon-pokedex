@@ -16,7 +16,7 @@ export default function App() {
         <PokemonList />
 
         <StatusBar style="auto" />
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </View>
     </QueryClientProvider>
   );

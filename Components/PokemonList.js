@@ -5,6 +5,8 @@ import {
   StatusBar,
   StyleSheet,
   Button,
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import { useState } from 'react';
 
@@ -23,30 +25,52 @@ const Item = ({ name, url }) => (
 );
 
 const PokemonList = () => {
-  const { data, isLoading, fetchNextPage } = usePokemons();
+  const [onEnd, setOnEnd] = useState(true);
+
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    usePokemons();
 
   const renderItem = ({ item, url }) => (
     <Item name={item.name} url={item.url} />
   );
 
   if (isLoading) {
-    return <Text style={styles.title}>loading</Text>;
+    return <ActivityIndicator size="large" color="#FFCB05" />;
   }
 
   const pokemonArray = data.pages.flatMap(
     (pokemonObject) => pokemonObject.results
   );
-  console.log(pokemonArray);
+
+  const renderFooter = () => (
+    <View>
+      {isFetchingNextPage && <ActivityIndicator size="large" color="#FFCB05" />}
+      {!hasNextPage && <Text>No more pokemon</Text>}
+    </View>
+  );
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text style={styles.title}>All Pokemon</Text>
       <FlatList
         data={pokemonArray}
         renderItem={renderItem}
         keyExtractor={(item) => item.url}
+        //endless scroll props
+        onMomentumScrollBegin={() => {
+          console.log(onEnd);
+          setOnEnd(false);
+        }}
+        ListFooterComponent={renderFooter}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          if (!onEnd) {
+            console.log('this is the end');
+            setOnEnd(true);
+          }
+        }}
       />
-      <Button title="Next" onPress={() => fetchNextPage()} />
+      {/* <Button title="Next" onPress={() => fetchNextPage()} /> */}
     </View>
   );
 };
