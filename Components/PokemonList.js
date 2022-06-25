@@ -10,13 +10,13 @@ import { useState } from 'react';
 
 import { usePokemons } from '../apis/pokemon';
 
-const Item = ({ name }) => (
+const Item = ({ name, url }) => (
   <View style={styles.button}>
     <Button
       style={styles.name}
       title={name}
       onPress={() => {
-        console.log(name);
+        console.log(url);
       }}
     />
   </View>
@@ -25,13 +25,17 @@ const Item = ({ name }) => (
 const PokemonList = () => {
   const { data, isLoading, fetchNextPage } = usePokemons();
 
-  const renderItem = ({ item }) => <Item name={item.name} />;
+  const renderItem = ({ item, url }) => (
+    <Item name={item.name} url={item.url} />
+  );
 
   if (isLoading) {
     return <Text style={styles.title}>loading</Text>;
   }
 
-  const pokemonArray = data.pages.map((pokemonObject) => pokemonObject.results);
+  const pokemonArray = data.pages.flatMap(
+    (pokemonObject) => pokemonObject.results
+  );
   console.log(pokemonArray);
 
   return (
