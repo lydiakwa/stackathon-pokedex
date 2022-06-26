@@ -23,9 +23,6 @@ const PokemonDetail = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-  },
   image: {
     width: 200,
     height: 200,

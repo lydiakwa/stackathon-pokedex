@@ -6,7 +6,16 @@ export const getPokemons = async ({
 }) => {
   // console.log(pageParam);
   const { data } = await axios.get(pageParam);
+  //regular javascript stuff
+  const detailResults = await Promise.all(
+    data.results.map(async (pokemon) => {
+      const newList = await getPokemon(pokemon.url);
+      newList.url = pokemon.url;
+      return newList;
+    })
+  );
 
+  data.detailResults = detailResults;
   return data;
 };
 

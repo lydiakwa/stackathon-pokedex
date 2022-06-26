@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Button,
   ActivityIndicator,
-  Dimensions,
+  Image,
 } from 'react-native';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -16,16 +16,25 @@ import { usePokemons } from '../apis/pokemon';
 import PokemonDetail from './PokemonDetail';
 
 //renders the individual list items (objects in the array passed into data)
-const Item = ({ name, url }) => {
+const Item = ({ pokemon }) => {
   const navigation = useNavigation();
-
+  console.log(Object.keys(pokemon));
   return (
     <View style={styles.button}>
+      <Image
+        style={styles.image}
+        source={{
+          uri: pokemon.sprites.other['official-artwork']['front_default'],
+        }}
+      />
       <Button
         style={styles.name}
-        title={name}
+        title={pokemon.name}
         onPress={() => {
-          navigation.navigate('Detail', { name: name, url: url });
+          navigation.navigate('Detail', {
+            name: pokemon.name,
+            url: pokemon.url,
+          });
         }}
       />
     </View>
@@ -36,16 +45,14 @@ const PokemonList = () => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     usePokemons();
 
-  const renderItem = ({ item, url }) => (
-    <Item name={item.name} url={item.url} />
-  );
+  const renderItem = ({ item }) => <Item pokemon={item} />;
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="#FFCB05" />;
   }
 
   const pokemonArray = data.pages.flatMap(
-    (pokemonObject) => pokemonObject.results
+    (pokemonObject) => pokemonObject.detailResults
   );
 
   const renderFooter = () => (
@@ -95,6 +102,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     fontWeight: 'bold',
+  },
+  image: {
+    width: 50,
+    height: 50,
   },
 });
 
