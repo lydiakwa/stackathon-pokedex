@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import PokemonList from './Components/PokemonList';
 import HomeScreen from './Components/HomeScreen';
+import PokemonDetail from './Components/PokemonDetail';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ export default function App() {
             options={{ title: 'Welcome' }}
           />
           <Stack.Screen name="List" component={PokemonList} />
+          <Stack.Screen name="Detail" component={PokemonDetail} />
         </Stack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
