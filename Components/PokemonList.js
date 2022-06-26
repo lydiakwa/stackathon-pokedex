@@ -25,7 +25,7 @@ const Item = ({ name, url }) => {
         style={styles.name}
         title={name}
         onPress={() => {
-          navigation.navigate('Detail');
+          navigation.navigate('Detail', { name: name, url: url });
         }}
       />
     </View>

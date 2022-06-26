@@ -10,9 +10,8 @@ export const getPokemons = async ({
   return data;
 };
 
-export const getPokemon = async () => {
-  const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon/1');
-  console.log(data);
+export const getPokemon = async (url) => {
+  const { data } = await axios.get(url);
   return data;
 };
 
@@ -22,4 +21,8 @@ export const usePokemons = () => {
   return useInfiniteQuery('pokemons', getPokemons, {
     getNextPageParam: (data) => data.next,
   });
+};
+
+export const useSinglePokemon = (url) => {
+  return useQuery(['pokemon', url], () => getPokemon(url));
 };

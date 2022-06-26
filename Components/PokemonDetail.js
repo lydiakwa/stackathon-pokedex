@@ -1,11 +1,35 @@
-import { Text, View } from 'react-native';
+import { Text, View, ActivityIndicator, Image, StyleSheet } from 'react-native';
 
-const PokemonDetail = () => {
+import { useSinglePokemon } from '../apis/pokemon';
+
+const PokemonDetail = (props) => {
+  const { data: pokemon, isLoading } = useSinglePokemon(props.route.params.url);
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="#FFCB05" />;
+  }
+
   return (
     <View>
-      <Text>Hi this is going to display the pokemon</Text>
+      <Text>{pokemon.name}</Text>
+      <Image
+        style={styles.image}
+        source={{
+          uri: pokemon.sprites.other['official-artwork']['front_default'],
+        }}
+      />
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 50,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'stretch',
+  },
+});
 export default PokemonDetail;
