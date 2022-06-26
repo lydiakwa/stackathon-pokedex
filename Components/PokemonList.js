@@ -6,19 +6,18 @@ import {
   StyleSheet,
   Button,
   ActivityIndicator,
+  TextInput,
   Image,
 } from 'react-native';
-import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
 
 import { usePokemons } from '../apis/pokemon';
-
-import PokemonDetail from './PokemonDetail';
 
 //renders the individual list items (objects in the array passed into data)
 const Item = ({ pokemon }) => {
   const navigation = useNavigation();
-  console.log(Object.keys(pokemon));
+  // console.log(Object.keys(pokemon));
   return (
     <View style={styles.button}>
       <Image
@@ -42,14 +41,17 @@ const Item = ({ pokemon }) => {
 };
 
 const PokemonList = () => {
+  const [type, setType] = useState('');
+  const [isFiltered, setIsFiltered] = useState(false);
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    usePokemons();
+    usePokemons(isFiltered, type);
 
   const renderItem = ({ item }) => <Item pokemon={item} />;
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="#FFCB05" />;
   }
+  console.log(Object.keys(data));
 
   const pokemonArray = data.pages.flatMap(
     (pokemonObject) => pokemonObject.detailResults
@@ -61,19 +63,20 @@ const PokemonList = () => {
       {!hasNextPage && <Text>No more pokemon</Text>}
     </View>
   );
-
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <Text style={styles.title}>All Pokemon</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Search by Type"
+        onChangeText={setType}
+        value={type}
+      />
+      <Button title="Filter" onPress={() => setIsFiltered(true)} />
       <FlatList
         data={pokemonArray}
         renderItem={renderItem}
         keyExtractor={(item) => item.url}
-        //endless scroll props
-        // onMomentumScrollBegin={() => {
-        //   console.log(onEnd);
-        //   setOnEnd(false);
-        // }}
         ListFooterComponent={renderFooter}
         onEndReachedThreshold={0.5}
         onEndReached={() => {
@@ -86,8 +89,9 @@ const PokemonList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    // flex: 1,
+    // marginTop: StatusBar.currentHeight || 0,
+    backgroundColor: '#3367B0',
   },
   name: {
     fontSize: 24,
@@ -98,14 +102,25 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 8,
     backgroundColor: '#FFCB05',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontSize: 40,
     fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#E6E6E6',
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 75,
+    height: 75,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
 
